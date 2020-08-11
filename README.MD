@@ -13,13 +13,30 @@ This should install the prerequisites Prism.Core and ShellProgressBar.
 ## Usage
 
 ```C#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using ProgressBarManager;
 using ProgressBarManager.Events;
 using ProgressBarManager.Events.Payloads;
 using Prism.Events;
 
+namespace ProgressBarManager.Examples
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IEventAggregator ea = new EventAggregator();
+            var test = new ProcessMaster(ea);
+            test.Start().Wait();
+        }
+    }
 
-public class ProcessMaster
+
+    public class ProcessMaster
     {
         IEventAggregator _ea;
 
@@ -76,7 +93,7 @@ public class ProcessMaster
                 //2. Since in this example we have a depth of 2 -> 2 children deep we spawn another progress bar but this bar is the child of the bar we spawned before at step 1 of this function.
                 _ea.GetEvent<SpawnChildProgressBarEvent>().Publish(new SpawnChildProgressBarPayload($"{taskName}step{i}", $"{taskName} step {i} starting", 6, taskName));
                 await Task.Delay(50);
-                
+
                 // Just a loop to generate childrens child events
                 for (var j = 0; j < 6; j++)
                 {
@@ -94,6 +111,8 @@ public class ProcessMaster
             }
         }
     }
+}
+
 
 ```
 
