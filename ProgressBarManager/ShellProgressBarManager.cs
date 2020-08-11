@@ -16,23 +16,22 @@ namespace ProgressBarManager
     public class ShellProgressBarManager : IDisposable
     {
         IEventAggregator _ea;
-        private static NamedProgressBarOptions defaultOptions = new NamedProgressBarOptions
+        private NamedProgressBarOptions defaultOptions = new NamedProgressBarOptions
         {
             Name = "MainBarOptions",
             BackgroundColor = ConsoleColor.DarkGray,
             EnableTaskBarProgress = RuntimeInformation.IsOSPlatform(OSPlatform.Windows),
         };
 
-        private static NamedProgressBarOptions defaultChildOptions1 = new NamedProgressBarOptions
+        private NamedProgressBarOptions defaultChildOptions1 = new NamedProgressBarOptions
         {
             Name = "defaultChildOptions1",
             ForegroundColor = ConsoleColor.Cyan,
             ForegroundColorDone = ConsoleColor.DarkGreen,
             ProgressCharacter = '─',
             BackgroundColor = ConsoleColor.DarkGray,
-            //CollapseWhenFinished = true,
         };
-        private static NamedProgressBarOptions defaultChildOptions2 = new NamedProgressBarOptions
+        private NamedProgressBarOptions defaultChildOptions2 = new NamedProgressBarOptions
         {
             Name = "defaultChildOptions2",
             ForegroundColor = ConsoleColor.Yellow,
@@ -42,15 +41,22 @@ namespace ProgressBarManager
         const string MainBarName = "main";
         ProgressBar progressBar { get; set; }
         Dictionary<string,Tuple<ChildProgressBar,string>> childProgressBars { get; set; }
-        public ShellProgressBarManager(IEventAggregator ea)
+        public ShellProgressBarManager(IEventAggregator ea, bool CollapseFinishedChildren = false)
         {
             _ea = ea;
+            if (CollapseFinishedChildren)
+            {
+                defaultChildOptions1.CollapseWhenFinished = true;
+                defaultChildOptions2.CollapseWhenFinished = true;
+            }
+
             _ea.GetEvent<SpawnProgressBarEvent>().Subscribe(SpawnProgressBar);
             _ea.GetEvent<SpawnChildProgressBarEvent>().Subscribe(SpawnChildProgressBar);
             _ea.GetEvent<TickBarEvent>().Subscribe(TickBar);
             _ea.GetEvent<ProgressBarMessageEvent>().Subscribe(ProgressBarMessage);
             _ea.GetEvent<ProgressBarTotalTicksChangeEvent>().Subscribe(ProgressBarTotalTicksChange);
             childProgressBars = new Dictionary<string, Tuple<ChildProgressBar, string>>();
+
         }
 
         private void ProgressBarTotalTicksChange(ProgressBarTotalTicksPayload obj)

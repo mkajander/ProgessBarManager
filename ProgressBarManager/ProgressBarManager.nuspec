@@ -2,17 +2,19 @@
 <package >
   <metadata>
     <id>ProgressBarManager</id>
-    <version>0.1.6</version>
-    <authors>mkajander</authors>
-    <owners>mkajander</owners>
+    <version>0.1.7</version>
+    <authors>Mikael Kajander</authors>
+    <owners>KPMG TCD</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <license type="expression">MIT</license>
-    <projectUrl>http://project_url_here_or_delete_this_line/</projectUrl>
+    <projectUrl>https://digitalservices.kpmg.fi/bitbucket/projects/RPA/repos/progressbarmanager/browse</projectUrl>
     <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl>
-    <description>Package description</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <description>
+      Progress Bar Manager is a C# library for easily implementing the ShellProgressBar into any C# project.
+    </description>
+    <releaseNotes>Added collapsing children option to constructor.</releaseNotes>
     <copyright>Copyright 2020</copyright>
-    <tags>Tag1 Tag2</tags>
+    <tags>progressbar process</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.6.1">
       </group>

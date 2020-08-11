@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\Payloads\ProgressBarTotalTicksPayload.cs" />
     <Compile Include="Events\Payloads\SpawnChildProgressBarPayload.cs" />
     <Compile Include="Events\Payloads\SpawnProgressBarPayload.cs" />
     <Compile Include="Events\Payloads\TickPayload.cs" />
