@@ -3,12 +3,11 @@
 Progress Bar Manager is a C# library for easily implementing the awesome [ShellProgressBar](https://github.com/Mpdreamz/shellprogressbar) into any C# project.
 
 ## Installation
-Install the ProgressBarManager nuget package from KPMG TCD Package source.
 ![Install the ProgressBarManager nuget package from KPMG TCD Package source.](nugetpack.png)  
   
   
 
-
+Install the ProgressBarManager nuget package from KPMG TCD Package source.
 This should install the prerequisites Prism.Core and ShellProgressBar.
 
 ## Usage
