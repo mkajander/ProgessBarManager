@@ -10,12 +10,16 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ProgressBarManager
 {
     public class ShellProgressBarManager : IDisposable
     {
         IEventAggregator _ea;
+        ILogger _logger;
+        private readonly bool _verboseLogging;
+        private bool Logging {get;}
         private NamedProgressBarOptions defaultOptions = new NamedProgressBarOptions
         {
             Name = "MainBarOptions",
@@ -41,9 +45,12 @@ namespace ProgressBarManager
         const string MainBarName = "main";
         ProgressBar progressBar { get; set; }
         Dictionary<string,Tuple<ChildProgressBar,string>> childProgressBars { get; set; }
-        public ShellProgressBarManager(IEventAggregator ea, bool CollapseFinishedChildren = false)
+        public ShellProgressBarManager(IEventAggregator ea, bool CollapseFinishedChildren = false, ILogger<ShellProgressBarManager> logger = null, bool verboseLogging = false)
         {
             _ea = ea;
+            _logger = logger;
+            _verboseLogging = verboseLogging;
+            Logging = _logger != null;
             if (CollapseFinishedChildren)
             {
                 defaultChildOptions1.CollapseWhenFinished = true;
@@ -69,6 +76,7 @@ namespace ProgressBarManager
             {
                 if (childProgressBars is null)
                 {
+                    _logger?.LogError($"No children spawned. {obj}");
                     throw new NullReferenceException("No children spawned.");
                 }
                 try
@@ -77,6 +85,7 @@ namespace ProgressBarManager
                 }
                 catch (NullReferenceException)
                 {
+                    _logger?.LogError($"No such progressbar. {obj}");
                     throw new NullReferenceException("No such progressbar.");
                 }
             }
@@ -86,12 +95,17 @@ namespace ProgressBarManager
         {
             if (obj.IsMain)
             {
+                if (_verboseLogging)
+                {
+                    _logger?.LogInformation($"{obj}");
+                }
                 progressBar.Message = obj.Message;
             }
             else
             {
                 if (childProgressBars is null)
                 {
+                    _logger?.LogError($"No children spawned. {obj}");
                     throw new NullReferenceException("No children spawned.");
                 }
                 try
@@ -100,6 +114,7 @@ namespace ProgressBarManager
                 }
                 catch (NullReferenceException)
                 {
+                    _logger?.LogError($"No such progressbar. {obj}");
                     throw new NullReferenceException("No such progressbar.");
                 }
             }
@@ -111,6 +126,10 @@ namespace ProgressBarManager
             {
                 var child = progressBar.Spawn(obj.TotalTicks, obj.InitialMessage, defaultChildOptions1);
                 childProgressBars.Add(obj.Name, new Tuple<ChildProgressBar, string>(child, defaultChildOptions1.Name));
+                if (_verboseLogging)
+                {
+                    _logger?.LogInformation($"Spawned main progressbar \n{obj}");
+                }
             } else
             {
                 try
@@ -118,8 +137,11 @@ namespace ProgressBarManager
                     NamedProgressBarOptions options = childProgressBars[obj.ParentName].Item2 == defaultChildOptions1.Name ? defaultChildOptions2 : defaultChildOptions1;
                     var child = childProgressBars[obj.ParentName].Item1.Spawn(obj.TotalTicks, obj.InitialMessage, options);
                     childProgressBars.Add(obj.Name, new Tuple<ChildProgressBar, string>(child,options.Name));
-                } catch (NullReferenceException)
+                    _logger?.LogInformation($"Spawned child progressbar \n{obj}");
+                }
+                catch (NullReferenceException)
                 {
+                    _logger?.LogError($"Parentbar not found. {obj}");
                     throw new NullReferenceException("Parentbar not found.");
                 }
             }
@@ -138,6 +160,7 @@ namespace ProgressBarManager
             {
                 if(childProgressBars is null)
                 {
+                    _logger?.LogError($"No children spawned.. {obj}");
                     throw new NullReferenceException("No children spawned.");
                 }
                 try
@@ -146,7 +169,7 @@ namespace ProgressBarManager
                 }
                 catch (NullReferenceException)
                 {
-                    throw new NullReferenceException("No such progressbar.");
+                    ErrorHandler(new NullReferenceException("No such progressbar."), obj);
                 }
             }
         }
@@ -155,7 +178,7 @@ namespace ProgressBarManager
         {
             if(progressBar != null)
             {
-                throw new Exception("Only one main progress bar allowed at any point in time. Invoke dispose to create a new one.");
+                ErrorHandler(new Exception("Only one main progress bar allowed at any point in time. Invoke dispose to create a new one."), obj);
             }
             progressBar = new ProgressBar(obj.TotalTicks, obj.InitialMessage, defaultOptions);
 
@@ -164,6 +187,12 @@ namespace ProgressBarManager
         public void Dispose()
         {
             ((IDisposable)progressBar)?.Dispose();
+        }
+
+        public void ErrorHandler(Exception ex, Object obj)
+        {
+            _logger?.LogError(ex, ex.Message, obj);
+            throw ex;
         }
     }
 }

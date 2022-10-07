@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1062
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgressBarManager", "ProgressBarManager\ProgressBarManager.csproj", "{561438FC-AB63-49C2-BF70-4F33811B89E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgressBarManager.Demo", "ProgressBarManager.Demo\ProgressBarManager.Demo.csproj", "{71A975D2-1AC5-4703-BF07-6619E5FA1616}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{561438FC-AB63-49C2-BF70-4F33811B89E2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{561438FC-AB63-49C2-BF70-4F33811B89E2}.Release|x64.ActiveCfg = Release|x64
 		{561438FC-AB63-49C2-BF70-4F33811B89E2}.Release|x64.Build.0 = Release|x64
+		{71A975D2-1AC5-4703-BF07-6619E5FA1616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71A975D2-1AC5-4703-BF07-6619E5FA1616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71A975D2-1AC5-4703-BF07-6619E5FA1616}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{71A975D2-1AC5-4703-BF07-6619E5FA1616}.Debug|x64.Build.0 = Debug|Any CPU
+		{71A975D2-1AC5-4703-BF07-6619E5FA1616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71A975D2-1AC5-4703-BF07-6619E5FA1616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71A975D2-1AC5-4703-BF07-6619E5FA1616}.Release|x64.ActiveCfg = Release|Any CPU
+		{71A975D2-1AC5-4703-BF07-6619E5FA1616}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
